@@ -1,0 +1,36 @@
+version: "3.3"
+services:
+  api-main:
+    build: ./docker/api-main
+    volumes:
+      - ./api-main:/api-main
+    ports:
+      - "5001:5000"
+    depends_on:
+      - database
+    command:
+      [
+        "./wait-for-it/wait-for-it.sh",
+        "database:5432",
+        "--",
+        "python",
+        "/api-main/run.py",
+      ]
+  frontend:
+    build: ./docker/frontend
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    ports:
+      - "8081:8080"
+    depends_on:
+      - api-main
+    logging:
+      driver: none
+    command: npm run serve
+  database:
+    build: ./docker/database
+    volumes:
+      - ./docker/database/postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5433:5432"

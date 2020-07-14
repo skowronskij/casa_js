@@ -1,0 +1,4 @@
+FROM kartoza/postgis:12.0
+ENV POSTGRES_DBNAME=casa_js
+ENV POSTGRES_PASS=admin
+ENV POSTGRES_USER=postgres
